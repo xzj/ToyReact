@@ -6,7 +6,13 @@ class MyComponent extends Component {
     }
 }
 
-let a = <MyComponent />;
+class C extends Component {
+    render() {
+        return <div>OK</div>;
+    }
+}
+
+let a = <MyComponent ><C></C></MyComponent>;
 
 console.log(" ==== okkkkkk");
 ToyReact.render(a, document.getElementById('root'));

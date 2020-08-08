@@ -3,6 +3,10 @@ export class Component {
     setAttribute(name, v) {
         this[name] = v;
     }
+    appendChild(vchild) {
+        const vdom = this.render();
+        vdom.appendChild(vchild);
+    }
     mountTo(parent) {
         const vdom = this.render();
         vdom.mountTo(parent);
