@@ -8,6 +8,7 @@ export class Component {
         vdom.appendChild(vchild);
     }
     mountTo(parent) {
+        console.log("==== this: ", this, " mount to: ", parent);
         const vdom = this.render();
         vdom.mountTo(parent);
     }
@@ -21,7 +22,7 @@ class ElementWrapper {
         this.root.setAttribute(name, v);
     }
     appendChild(vchild) {
-            console.log(" ==== append child: ", this);
+            console.log(" ==== append child: ", vchild, " to: ", this);
         this.root.appendChild(vchild);
     }
     mountTo(parent) {

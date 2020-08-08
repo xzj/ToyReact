@@ -8,11 +8,11 @@ class MyComponent extends Component {
 
 class C extends Component {
     render() {
-        return <div>OK</div>;
+        return <span>OK</span>;
     }
 }
 
-let a = <MyComponent ><C></C></MyComponent>;
+let a = <MyComponent ><div><C></C></div></MyComponent>;
 
 console.log(" ==== okkkkkk");
 ToyReact.render(a, document.getElementById('root'));
