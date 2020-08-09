@@ -31,12 +31,26 @@ export class Component {
             this.state = {};
         }
         merge(this.state, state);
-        console.log(this.state);
+        this.update();
     }
-    mountTo(parent) {
-        console.log("==== this: ", this, " mount to: ", parent);
+    mountTo(range) {
+        console.log("==== this: ", this, " mount to: ", range);
+        // range.deleteContents();
+        // const vdom = this.render();
+        // vdom.mountTo(range);
+        this.range = range;
+        this.update();
+    }
+    update() {
+        const placeholder = document.createComment("placeholder");
+        const range = document.createRange();
+        range.setStart(this.range.endContainer, this.range.endOffset);
+        range.setEnd(this.range.endContainer, this.range.endOffset);
+        range.insertNode(placeholder);
+
+        this.range.deleteContents();
         const vdom = this.render();
-        vdom.mountTo(parent);
+        vdom.mountTo(this.range);
     }
 }
 
@@ -57,18 +71,23 @@ class ElementWrapper {
     appendChild(vchild) {
         console.log(" ==== append child: ", vchild, " to: ", this);
         // this.root.appendChild(vchild);
-        vchild.mountTo(this.root);
+        // vchild.mountTo(this.root);
+        mountVdomToElement(vchild, this.root);
     }
-    mountTo(parent) {
-        parent.appendChild(this.root);
+    mountTo(range) {
+        range.deleteContents();
+        range.insertNode(this.root);
+        // parent.appendChild(this.root);
     }
 }
 class TextWrapper {
     constructor(content) {
         this.root = document.createTextNode(content);
     }
-    mountTo(parent) {
-        parent.appendChild(this.root);
+    mountTo(range) {
+        range.deleteContents();
+        range.insertNode(this.root);
+        // parent.appendChild(this.root);
     }
 }
 
@@ -111,6 +130,19 @@ export let ToyReact = {
         return e;
     },
     render(vdom, e) {
-        vdom.mountTo(e);
+        mountVdomToElement(vdom, e);
     }
+}
+
+function mountVdomToElement(vdom, e) {
+    const range = document.createRange();
+    if(e.children.length) {
+        range.setStartAfter(e.lastChild);
+        range.setEndAfter(e.lastChild);
+    }
+    else {
+        range.setStart(e, 0);
+        range.setEnd(e, 0);
+    }
+    vdom.mountTo(range);
 }
