@@ -1,11 +1,15 @@
 
 export class Component {
+    constructor() {
+        this.children = [];
+    }
     setAttribute(name, v) {
         this[name] = v;
     }
     appendChild(vchild) {
-        const vdom = this.render();
-        vdom.appendChild(vchild);
+        // const vdom = this.render();
+        // vdom.appendChild(vchild);
+        this.children.push(vchild);
     }
     mountTo(parent) {
         console.log("==== this: ", this, " mount to: ", parent);
@@ -22,8 +26,9 @@ class ElementWrapper {
         this.root.setAttribute(name, v);
     }
     appendChild(vchild) {
-            console.log(" ==== append child: ", vchild, " to: ", this);
-        this.root.appendChild(vchild);
+        console.log(" ==== append child: ", vchild, " to: ", this);
+        // this.root.appendChild(vchild);
+        vchild.mountTo(this.root);
     }
     mountTo(parent) {
         parent.appendChild(this.root);
@@ -34,7 +39,6 @@ class TextWrapper {
         this.root = document.createTextNode(content);
     }
     mountTo(parent) {
-            console.log(" ==== mount to parent: ", parent);
         parent.appendChild(this.root);
     }
 }
@@ -55,14 +59,25 @@ export let ToyReact = {
             e.setAttribute(k, attributes[k]);
         }
 
-        for (let child of children) {
-            if (typeof child === "string") {
-                // child = document.createTextNode(child);
-                child = new TextWrapper(child);
+        const insertChildren = (children) => {
+            for (let child of children) {
+                if((typeof child === "object") && (child instanceof Array)) {
+                    insertChildren(child);
+                }
+                else {
+                    if(!((child instanceof Component) || (child instanceof ElementWrapper) || (child instanceof TextWrapper))) {
+                        child = String(child);
+                    }
+                    if (typeof child === "string") {
+                        // child = document.createTextNode(child);
+                        child = new TextWrapper(child);
+                    }
+                    // child.mountTo(e);
+                    e.appendChild(child);
+                }
             }
-            child.mountTo(e);
-            // e.appendChild(child);
         }
+        insertChildren(children);
         // debugger;
         return e;
     },

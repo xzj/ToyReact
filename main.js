@@ -2,7 +2,7 @@ import {ToyReact, Component} from "./ToyReact.js";
 
 class MyComponent extends Component {
     render() {
-        return <div>Hello world!</div>;
+        return <div>Hello world!{this.children}{true}</div>;
     }
 }
 
@@ -13,6 +13,7 @@ class C extends Component {
 }
 
 let a = <MyComponent ><div><C></C></div></MyComponent>;
+console.log(" ++++ a: ", a);
 
 console.log(" ==== okkkkkk");
 ToyReact.render(a, document.getElementById('root'));
