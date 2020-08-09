@@ -2,8 +2,10 @@
 export class Component {
     constructor() {
         this.children = [];
+        this.props = Object.create(null);
     }
     setAttribute(name, v) {
+        this.props[name] = v;
         this[name] = v;
     }
     appendChild(vchild) {
