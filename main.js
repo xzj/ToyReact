@@ -3,10 +3,10 @@ import {ToyReact, Component} from "./ToyReact.js";
 class Square extends Component {
   render() {
       return (
-            <button className="square">
-                        {this.props.value}
-                              </button>
-                                  );
+          <button className="square" onClick={() => alert("ok")}>
+              {this.props.value}
+          </button>
+          );
     }
 }
 

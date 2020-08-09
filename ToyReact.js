@@ -25,6 +25,10 @@ class ElementWrapper {
         this.root = document.createElement(tag);
     }
     setAttribute(name, v) {
+        if (name.match(/^on(.+)$/)) {
+            const eventName = RegExp.$1.replace(/^[\s\S]/, s => s.toLowerCase());
+            this.root.addEventListener(eventName, v);
+        }
         this.root.setAttribute(name, v);
     }
     appendChild(vchild) {
