@@ -60,31 +60,67 @@ export class Component {
 }
 
 class ElementWrapper {
-    constructor(tag) {
-        this.root = document.createElement(tag);
+    constructor(type) {
+        this.type = type;
+        this.props = Object.create(null);
+        this.children = [];
     }
     setAttribute(name, v) {
-        if (name.match(/^on(.+)$/)) {
-            const eventName = RegExp.$1.replace(/^[\s\S]/, s => s.toLowerCase());
-            this.root.addEventListener(eventName, v);
-        }
-        if (name === "className") {
-            name = 'class';
-        }
-        this.root.setAttribute(name, v);
+        this.props[name] = v;
     }
     appendChild(vchild) {
-        console.log(" ==== append child: ", vchild, " to: ", this);
-        // this.root.appendChild(vchild);
-        // vchild.mountTo(this.root);
-        mountVdomToElement(vchild, this.root);
+        this.children.push(vchild);
     }
     mountTo(range) {
         range.deleteContents();
-        range.insertNode(this.root);
-        // parent.appendChild(this.root);
+        const element = document.createElement(this.type);
+
+        for (let name in this.props) {
+            const v = this.props[name];
+            if (name.match(/^on(.+)$/)) {
+                const eventName = RegExp.$1.replace(/^[\s\S]/, s => s.toLowerCase());
+                element.addEventListener(eventName, v);
+            }
+            if (name === "className") {
+                element.setAttribute("class", v);
+            }
+            element.setAttribute(name, v);
+        }
+
+        for (let child of this.children) {
+            mountVdomToElement(child, element);
+        }
+
+        range.insertNode(element);
     }
 }
+
+// class ElementWrapper {
+//     constructor(tag) {
+//         this.root = document.createElement(tag);
+//     }
+//     setAttribute(name, v) {
+//         if (name.match(/^on(.+)$/)) {
+//             const eventName = RegExp.$1.replace(/^[\s\S]/, s => s.toLowerCase());
+//             this.root.addEventListener(eventName, v);
+//         }
+//         if (name === "className") {
+//             name = 'class';
+//         }
+//         this.root.setAttribute(name, v);
+//     }
+//     appendChild(vchild) {
+//         console.log(" ==== append child: ", vchild, " to: ", this);
+//         // this.root.appendChild(vchild);
+//         // vchild.mountTo(this.root);
+//         mountVdomToElement(vchild, this.root);
+//     }
+//     mountTo(range) {
+//         range.deleteContents();
+//         range.insertNode(this.root);
+//         // parent.appendChild(this.root);
+//     }
+// }
 class TextWrapper {
     constructor(content) {
         this.root = document.createTextNode(content);
