@@ -171,10 +171,6 @@ class Game extends Component {
                         onClick={i => this.handleClick(i)}
                     />
                 </div>
-                <div className="game-info">
-                    <div>{status}</div>
-                    <ol>{moves}</ol>
-                </div>
             </div>
             );
     }
@@ -183,6 +179,8 @@ class Game extends Component {
 // ========================================
 
 ToyReact.render(<Game />, document.getElementById("root"));
+// let game = <Game />;
+// console.log(" ==== Game: ", game.vdom);
 
 function calculateWinner(squares) {
     const lines = [
